@@ -58,3 +58,26 @@ class AbstractController {
         console.log(`A maze item clicked: ${i + " " + j}`);
     }
 }
+
+class MangedItemController extends AbstractController {
+    constructor (maze, canvas, canvasWidth, canvasHeight, actionIntervalMs, managedItem) {
+        super(maze, canvas, canvasWidth, canvasHeight, actionIntervalMs);
+        this.managedItem = managedItem;
+    }
+
+    onButtonUpClicked () {
+        this.managedItem.moveUp();
+    }
+
+    onButtonDownClicked () {
+        this.managedItem.moveDown();
+    }
+
+    onButtonLeftClicked () {
+        this.managedItem.moveLeft();
+    }
+
+    onButtonRightClicked () {
+        this.managedItem.moveRight();
+    }
+}
