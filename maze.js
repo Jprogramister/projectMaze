@@ -66,53 +66,49 @@ class Maze {
     }
 
     shiftItem (i, j, direction, shift = 1) {
+        const isNeighbourExists = this.neighbourOf(i, j, direction, shift);
+        if (!isNeighbourExists) {
+            return false;
+        }
         const item = this.itemAt(i, j);
-        let isAbleShift = false;
         switch (direction) {
-            case Direction.none: break;
+            case Direction.none:
+                return false;
             case Direction.down: 
             case Direction.up: 
-                isAbleShift = item.j + shift < this.rows() -1 && item.j + shift >= 0;
-                if (isAbleShift) {
-                    item.j = item.j + shift;
-                    this.place(item);
-                    this.fill(i, j);
-                }
-                return isAbleShift;
+                item.j = item.j + shift;
+                this.place(item);
+                this.fill(i, j);
+                return true;
             case Direction.left: 
             case Direction.right: 
-                isAbleShift = item.i + shift < this.columns() -1 && item.i + shift >= 0;
-                if (isAbleShift) {
-                    item.i = item.i + shift;
-                    this.place(item);
-                    this.fill(i, j);
-                }
-                return isAbleShift;
+                item.i = item.i + shift;
+                this.place(item);
+                this.fill(i, j);
+                return true;
         }
     }
 
-    neighbourAt(i, j, direction, shift = 1) {
-        let isAbleShift = false;
+    neighbourOf(i, j, direction, shift = 1) {
+        let isNeighbourExists = false;
         switch (direction) {
             case Direction.none: break;
             case Direction.down:
             case Direction.up:
-                isAbleShift = j + shift < this.rows() -1 && j + shift >= 0;
-                if (isAbleShift) {
+                isNeighbourExists = j + shift < this.rows() -1 && j + shift >= 0;
+                if (isNeighbourExists) {
                     j = j + shift;
-                    return this.itemAt(i, j);
-                } else {
-                    return undefined;
                 }
+                break;
             case Direction.left:
             case Direction.right:
-                isAbleShift = i + shift < this.columns() -1 && i + shift >= 0;
-                if (isAbleShift) {
-                    i = item.i + shift;
-                    return this.itemAt(i, j);
+                isNeighbourExists = i + shift < this.columns() -1 && i + shift >= 0;
+                if (isNeighbourExists) {
+                    i = i + shift;
                 }
-                return undefined;
+                break;
         }
+        return isNeighbourExists ? this.itemAt(i, j) : undefined;
     }
 
     rows () {
