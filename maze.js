@@ -12,7 +12,7 @@ class Maze {
         this.grid = [];
         this.n = 0;
         this.m = 0;
-        this.fillerSupplier = undefined;
+        this.backgroundObjectsSupplier = undefined;
     }
 
     itemAt (i, j) {
@@ -93,9 +93,9 @@ class Maze {
         }
     }
 
-    init (n, m, fillerSupplier) {
+    init (n, m, backgroundObjectsSupplier) {
         this.resize(n, m);
-        this.fillerSupplier = fillerSupplier
+        this.backgroundObjectsSupplier = backgroundObjectsSupplier
         for (let i = 0; i < n; ++i) {
             for (let j = 0; j < m; ++j) {
                 this.fill(i, j);
@@ -104,6 +104,6 @@ class Maze {
     }
 
     fill (i, j) {
-        this.grid[i][j] = this.fillerSupplier(i, j);
+        this.grid[i][j] = this.backgroundObjectsSupplier(i, j);
     }
 }

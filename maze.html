@@ -4,6 +4,7 @@
 <head>
     <title>Maze</title>
     <script src="graphics.js" type="text/javascript"></script>
+    <script src="algorithms.js" type="text/javascript"></script>
     <script src="item.js" type="text/javascript"></script>
     <script src="maze.js" type="text/javascript"></script>
 </head>
@@ -18,7 +19,7 @@
     const CANVAS_HEIGHT = 600;
     const MAZE_WIDTH = 40;
     const MAZE_HEIGHT = 40;
-    const RERENDER_INTERVAL = 500;
+    const RERENDER_INTERVAL = 200;
 
     var itemsCounter = 0;
 
@@ -44,6 +45,9 @@
             controlItem.moveDown();
         }
     });
+
+    const algorithms = new Algorithms(maze, (i, j) => new ItemSymbol(itemsCounter++, i, j, 'W', false));
+    algorithms.initializeWalls(0.1);
 
     setInterval(() => {
         document.getElementById('canvas').getContext('2d').clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
