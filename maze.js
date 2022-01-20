@@ -1,44 +1,4 @@
 
-
-class AbstractItem {
-    constructor (id, i, j, isBackground = true) {
-        this.id = id;
-        this.i = i;
-        this.j = j;
-        this.isBackground = isBackground;
-    }
-}
-
-class ItemWithControl extends AbstractItem {
-    constructor (id, i, j, maze) {
-        super(id, i, j, false);
-        this.maze = maze;
-    }
-
-    moveUp () {
-        return this.maze.shiftItem(this.i, this.j, Direction.up, -1);
-    }
-
-    moveDown () {
-        return this.maze.shiftItem(this.i, this.j, Direction.down);
-    }
-
-    moveRight () {
-        return this.maze.shiftItem(this.i, this.j, Direction.right);
-    }
-
-    moveLeft () {
-        return this.maze.shiftItem(this.i, this.j, Direction.left, -1);
-    }
-}
-
-class ItemSymbol extends AbstractItem {
-    constructor (id, i, j, symbol, isBackground = true) {
-        super(id, i, j, isBackground);
-        this.symbol = symbol;
-    }
-}
-
 var Direction = {
     none: 0,
     up: 1,
@@ -145,35 +105,5 @@ class Maze {
 
     fill (i, j) {
         this.grid[i][j] = this.fillerSupplier(i, j);
-    }
-}
-
-class MazeToCanvasPrinter {
-    constructor (canvas, widthPx, heightPx) {
-        this.canvas = canvas;
-        this.widthPx = widthPx;
-        this.heightPx = heightPx;
-    }
-
-    print (maze) {
-        const mazeCellWidth = this.widthPx / maze.columns();
-        const mazeCellHeight = this.heightPx / maze.rows();
-        for (let x = mazeCellWidth, i = 0; x < this.widthPx; x += mazeCellWidth, i++) {
-            for (let y = mazeCellHeight, j = 0; y < this.heightPx; y += mazeCellHeight, j++) {
-                const mazeItem = maze.itemAt(i, j);
-                this.__printItem(mazeItem, x, y);
-            }
-        }
-    }
-
-    __printItem (item, x, y) {
-        if (item.constructor.name === "ItemSymbol") {
-            this.canvas.fillText(item.symbol, x, y);
-            return;
-        } else if (item.constructor.name === "ItemWithControl") {
-            this.canvas.fillText("X", x, y);
-            return;
-        }
-        throw new Error(`Unknown item type ${item.constructor.name}.`);
     }
 }
