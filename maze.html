@@ -7,6 +7,7 @@
     <script src="algorithms.js" type="text/javascript"></script>
     <script src="item.js" type="text/javascript"></script>
     <script src="maze.js" type="text/javascript"></script>
+    <script src="controller.js" type="text/javascript"></script>
 </head>
 
 <body>
@@ -20,18 +21,22 @@
     const MAZE_WIDTH = 40;
     const MAZE_HEIGHT = 40;
     const RERENDER_INTERVAL = 200;
+    const ACTIONS_INTERVAL = 400;
 
     var itemsCounter = 0;
 
     const maze = new Maze();
     maze.init(MAZE_WIDTH, MAZE_HEIGHT, (i, j) => new ItemSymbol(itemsCounter++, i, j, '0'));
 
-    const mazeToCanvasPrinter = new MazeToCanvasPrinter(document.getElementById('canvas').getContext('2d'), CANVAS_WIDTH, CANVAS_HEIGHT);
+    const canvas = document.getElementById('canvas');
+    const canvas2DCtx = canvas.getContext('2d');
 
-    const controlItem = new ItemWithControl(itemsCounter++, 10, 10, maze);
+    const mazeToCanvasPrinter = new MazeToCanvasPrinter(canvas2DCtx, CANVAS_WIDTH, CANVAS_HEIGHT);
+
+    const controlItem = new ItemWithControl(itemsCounter++, 3, 7, maze);
     maze.place(controlItem);
 
-    document.addEventListener('keydown', function (event) {
+    document.addEventListener('keydown', event => {
         if (event.keyCode == 37) {  
             controlItem.moveLeft();
         }
@@ -49,8 +54,10 @@
     const algorithms = new Algorithms(maze, (i, j) => new ItemSymbol(itemsCounter++, i, j, 'W', false));
     algorithms.initializeWalls(0.1);
 
+    const controller = new AbstractController(maze, canvas, CANVAS_WIDTH, CANVAS_HEIGHT, ACTIONS_INTERVAL);
+
     setInterval(() => {
-        document.getElementById('canvas').getContext('2d').clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+        canvas2DCtx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
         mazeToCanvasPrinter.print(maze);
     }, RERENDER_INTERVAL);
 </script>

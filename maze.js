@@ -95,7 +95,7 @@ class Maze {
 
     init (n, m, backgroundObjectsSupplier) {
         this.resize(n, m);
-        this.backgroundObjectsSupplier = backgroundObjectsSupplier
+        this.backgroundObjectsSupplier = backgroundObjectsSupplier;
         for (let i = 0; i < n; ++i) {
             for (let j = 0; j < m; ++j) {
                 this.fill(i, j);
