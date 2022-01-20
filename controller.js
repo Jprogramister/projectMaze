@@ -30,32 +30,26 @@ class AbstractController {
             const itemI = Math.ceil(x / mazeItemHeightPx) - 2;
             const itemJ = Math.ceil(y / mazeItemWidthPx) - 2;
             const item = this.maze.itemAt(itemI, itemJ);
-            this.onMazeItemClicked(itemI, itemJ, item);
+            this.onMazeItemClicked(item);
         }.bind(this));
     }
 
     onButtonUpClicked() {
-
     }
 
     onButtonDownClicked() {
-
     }
 
     onButtonLeftClicked() {
-
     }
 
     onButtonRightClicked() {
-
     }
 
     onActionTick () {
-
     }
 
-    onMazeItemClicked (i, j, clickedItem) {
-        console.log(`A maze item clicked: ${i + " " + j}`);
+    onMazeItemClicked (clickedItem) {
     }
 }
 
@@ -63,6 +57,7 @@ class MangedItemController extends AbstractController {
     constructor (maze, canvas, canvasWidth, canvasHeight, actionIntervalMs, managedItem) {
         super(maze, canvas, canvasWidth, canvasHeight, actionIntervalMs);
         this.managedItem = managedItem;
+        this.currentTrack = [];
     }
 
     onButtonUpClicked () {
@@ -79,5 +74,16 @@ class MangedItemController extends AbstractController {
 
     onButtonRightClicked () {
         this.managedItem.moveRight();
+    }
+
+    onMazeItemClicked (clickedItem) {
+        this.currentTrack = Algorithms.findShortestStraightTrack(this.managedItem.i, this.managedItem.j, clickedItem.i, clickedItem.j);
+    }
+
+    onActionTick () {
+        if (this.currentTrack.length > 0) {
+            const step = this.currentTrack.shift();
+            step.apply(this.managedItem, this.maze);
+        }
     }
 }

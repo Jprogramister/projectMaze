@@ -14,7 +14,7 @@ class ItemWithControl extends AbstractItem {
     }
 
     moveUp () {
-        return this.maze.shiftItem(this.i, this.j, Direction.up, -1);
+        return this.maze.shiftItem(this.i, this.j, Direction.up);
     }
 
     moveDown () {
@@ -26,7 +26,7 @@ class ItemWithControl extends AbstractItem {
     }
 
     moveLeft () {
-        return this.maze.shiftItem(this.i, this.j, Direction.left, -1);
+        return this.maze.shiftItem(this.i, this.j, Direction.left);
     }
 }
 

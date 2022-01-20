@@ -7,6 +7,43 @@ var Direction = {
     left: 4,
 };
 
+class Vector {
+    constructor (diffX, diffY) {
+        this.diffX = diffX;
+        this.diffY = diffY;
+    }
+
+    apply (item, maze) {
+        const steps = this.toDirection();
+        if (steps.length < 2) {
+            return maze.shiftItem(item.i, item.j, steps[0]);
+        } else {
+            const firstStep = steps[0];
+            const secondStep = steps[1];
+            let isSomeStepDone;
+            if (!(isSomeStepDone = maze.shiftItem(item.i, item.j, firstStep))) {
+                // tries to do steps in opposite order if first step is impossible
+                isSomeStepDone |= maze.shiftItem(item.i, item.j, secondStep);
+                isSomeStepDone |= maze.shiftItem(item.i, item.j, firstStep);
+            } else {
+                isSomeStepDone |= maze.shiftItem(item.i, item.j, secondStep);
+            }
+            return isSomeStepDone;
+        }
+    }
+
+    toDirection () {
+        const steps = [];
+        if (this.diffX !== 0) {
+            steps.push(this.diffX > 0 ? Direction.right : Direction.left);
+        }
+        if (this.diffY !== 0) {
+            steps.push(this.diffY > 0 ? Direction.down : Direction.up);
+        }
+        return steps;
+    }
+}
+
 class Maze {
     constructor () {
         this.grid = [];
@@ -27,6 +64,9 @@ class Maze {
     }
 
     shiftItem (i, j, direction, shift = 1) {
+        if (direction === Direction.left || direction === Direction.up) {
+            shift = -shift;
+        }
         const neighbour = this.neighbourOf(i, j, direction, shift);
         if (!neighbour || !neighbour.isBackground) {
             return false;

@@ -4,10 +4,10 @@
 <head>
     <title>Maze</title>
     <script src="graphics.js" type="text/javascript"></script>
-    <script src="algorithms.js" type="text/javascript"></script>
     <script src="item.js" type="text/javascript"></script>
     <script src="maze.js" type="text/javascript"></script>
     <script src="controller.js" type="text/javascript"></script>
+    <script src="algorithms.js" type="text/javascript"></script>
 </head>
 
 <body>
@@ -16,10 +16,10 @@
 
 
 <script type="text/javascript">
-    const CANVAS_WIDTH = 600;
-    const CANVAS_HEIGHT = 600;
-    const MAZE_WIDTH = 40;
-    const MAZE_HEIGHT = 40;
+    const CANVAS_WIDTH = 200;
+    const CANVAS_HEIGHT = 200;
+    const MAZE_WIDTH = 20;
+    const MAZE_HEIGHT = 20;
     const RERENDER_INTERVAL = 200;
     const ACTIONS_INTERVAL = 400;
 
@@ -33,11 +33,10 @@
 
     const mazeToCanvasPrinter = new MazeToCanvasPrinter(canvas2DCtx, CANVAS_WIDTH, CANVAS_HEIGHT);
 
+    Algorithms.initializeWalls(maze, 0.1, (i, j) => new ItemSymbol(itemsCounter++, i, j, 'W', false));
+
     const controlItem = new ItemWithControl(itemsCounter++, 3, 7, maze);
     maze.place(controlItem);
-
-    const algorithms = new Algorithms(maze, (i, j) => new ItemSymbol(itemsCounter++, i, j, 'W', false));
-    algorithms.initializeWalls(0.1);
 
     const mainItemController = new MangedItemController(maze, canvas, CANVAS_WIDTH, CANVAS_HEIGHT, ACTIONS_INTERVAL, controlItem);
 
