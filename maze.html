@@ -16,12 +16,13 @@
 
 
 <script type="text/javascript">
-    const CANVAS_WIDTH = 200;
-    const CANVAS_HEIGHT = 200;
+    const CANVAS_WIDTH = 500;
+    const CANVAS_HEIGHT = 500;
     const MAZE_WIDTH = 20;
     const MAZE_HEIGHT = 20;
     const RERENDER_INTERVAL = 200;
     const ACTIONS_INTERVAL = 400;
+    const PERSON_SIZE = 40;
 
     var itemsCounter = 0;
 
@@ -31,11 +32,13 @@
     const canvas = document.getElementById('canvas');
     const canvas2DCtx = canvas.getContext('2d');
 
-    const mazeToCanvasPrinter = new MazeToCanvasPrinter(canvas2DCtx, CANVAS_WIDTH, CANVAS_HEIGHT);
+    const mazeToCanvasPrinter = new MazeToCanvasPrinter(canvas2DCtx, CANVAS_WIDTH, CANVAS_HEIGHT, MAZE_WIDTH, MAZE_HEIGHT);
 
     Algorithms.initializeWalls(maze, 0.1, (i, j) => new ItemSymbol(itemsCounter++, i, j, 'W', false));
 
-    const controlItem = new ItemWithControl(itemsCounter++, 3, 7, maze);
+    const img = new Image();
+    img.src = "hero.png";
+    const controlItem = new ItemWithControl(itemsCounter++, 3, 7, maze, img, 70, 70, 0, 0, PERSON_SIZE, PERSON_SIZE);
     maze.place(controlItem);
 
     const mainItemController = new MangedItemController(maze, canvas, CANVAS_WIDTH, CANVAS_HEIGHT, ACTIONS_INTERVAL, controlItem);

@@ -1,8 +1,11 @@
+
 class MazeToCanvasPrinter {
-    constructor (canvas, widthPx, heightPx) {
-        this.canvas = canvas;
+    constructor (canvas2DCtx, widthPx, heightPx, gridWidth, gridHeight) {
+        this.canvas2DCtx = canvas2DCtx;
         this.widthPx = widthPx;
         this.heightPx = heightPx;
+        this.gridWidth = gridWidth;
+        this.gridHeight = gridHeight;
     }
 
     print (maze) {
@@ -18,12 +21,16 @@ class MazeToCanvasPrinter {
 
     __printItem (item, x, y) {
         if (item.constructor.name === "ItemSymbol") {
-            this.canvas.fillText(item.symbol, x, y);
-            return;
+            this.canvas2DCtx.fillText(item.symbol, x, y);
         } else if (item.constructor.name === "ItemWithControl") {
-            this.canvas.fillText("X", x, y);
-            return;
+            this.canvas2DCtx.fillText("X", x, y);
         }
-        throw new Error(`Unknown item type ${item.constructor.name}.`);
+        if (item.drawer) {
+            const spriteX = item.i * (this.widthPx / this.gridWidth);
+            const spriteY = item.j * (this.heightPx / this.gridHeight);
+            item.drawer(this.canvas2DCtx, spriteX, spriteY);
+        }
+
+        // throw new Error(`Unknown item type ${item.constructor.name}.`);
     }
 }

@@ -1,3 +1,4 @@
+
 class AbstractItem {
     constructor (id, i, j, isBackground = true) {
         this.id = id;
@@ -7,9 +8,16 @@ class AbstractItem {
     }
 }
 
-class ItemWithControl extends AbstractItem {
-    constructor (id, i, j, maze) {
-        super(id, i, j, false);
+class ItemWithSprite extends AbstractItem {
+    constructor (id, i, j, isBackground, image, sWidth, sHeight, dx, dy, dw, dh) {
+        super(id, i, j, isBackground);
+        this.drawer = (ctx, x, y) => ctx.drawImage(image, dx, dy, sWidth, sHeight, x, y, dw, dh);
+    }
+}
+
+class ItemWithControl extends ItemWithSprite {
+    constructor (id, i, j, maze, image, sWidth, sHeight, dx, dy, dw, dh) {
+        super(id, i, j, false, image, sWidth, sHeight, dx, dy, dw, dh);
         this.maze = maze;
     }
 
