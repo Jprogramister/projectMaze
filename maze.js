@@ -1,16 +1,17 @@
 
 
 class AbstractItem {
-    constructor (id, i, j) {
+    constructor (id, i, j, isBackground = true) {
         this.id = id;
         this.i = i;
         this.j = j;
+        this.isBackground = isBackground;
     }
 }
 
 class ItemWithControl extends AbstractItem {
     constructor (id, i, j, maze) {
-        super(id, i, j);
+        super(id, i, j, false);
         this.maze = maze;
     }
 
@@ -32,8 +33,8 @@ class ItemWithControl extends AbstractItem {
 }
 
 class ItemSymbol extends AbstractItem {
-    constructor (id, i, j, symbol) {
-        super(id, i, j);
+    constructor (id, i, j, symbol, isBackground = true) {
+        super(id, i, j, isBackground);
         this.symbol = symbol;
     }
 }
@@ -66,8 +67,8 @@ class Maze {
     }
 
     shiftItem (i, j, direction, shift = 1) {
-        const isNeighbourExists = this.neighbourOf(i, j, direction, shift);
-        if (!isNeighbourExists) {
+        const neighbour = this.neighbourOf(i, j, direction, shift);
+        if (!neighbour || !neighbour.isBackground) {
             return false;
         }
         const item = this.itemAt(i, j);
@@ -169,8 +170,7 @@ class MazeToCanvasPrinter {
         if (item.constructor.name === "ItemSymbol") {
             this.canvas.fillText(item.symbol, x, y);
             return;
-        }
-        if (item.constructor.name === "ItemWithControl") {
+        } else if (item.constructor.name === "ItemWithControl") {
             this.canvas.fillText("X", x, y);
             return;
         }
