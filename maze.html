@@ -16,10 +16,10 @@
 
 
 <script type="text/javascript">
-    const CANVAS_WIDTH = 500;
-    const CANVAS_HEIGHT = 500;
-    const MAZE_WIDTH = 20;
-    const MAZE_HEIGHT = 20;
+    const MAZE_WIDTH = 40;
+    const MAZE_HEIGHT = 40;
+    const CANVAS_WIDTH = MAZE_WIDTH * 25;
+    const CANVAS_HEIGHT = MAZE_HEIGHT * 25;
     const RERENDER_INTERVAL = 200;
     const ACTIONS_INTERVAL = 400;
     const PERSON_SIZE = 40;
@@ -27,30 +27,43 @@
 
     var itemsCounter = 0;
 
-    const maze = new Maze();
+    const start = async () => {
+        const maze = new Maze();
 
-    const bgImg = new Image();
-    bgImg.src = "forest.png";
-    maze.init(MAZE_WIDTH, MAZE_HEIGHT, (i, j) => new ItemWithSprite(itemsCounter++, i, j, true, bgImg, 20, 20, 680, 680, BG_SIZE, BG_SIZE));
+        const loadImage = file => {
+            const img = new Image();
+            img.src = file;
+            return img;
+        }
 
-    const canvas = document.getElementById('canvas');
-    const canvas2DCtx = canvas.getContext('2d');
+        const treeImage = loadImage("forest.png");
+        await maze.init(MAZE_WIDTH, MAZE_HEIGHT, (i, j) => new ItemWithSprite(itemsCounter++, i, j, true, treeImage, 20, 20, 680, 680, BG_SIZE, BG_SIZE));
 
-    const mazeToCanvasPrinter = new MazeToCanvasPrinter(canvas2DCtx, CANVAS_WIDTH, CANVAS_HEIGHT, MAZE_WIDTH, MAZE_HEIGHT);
+        const canvas = document.getElementById('canvas');
+        const canvas2DCtx = canvas.getContext('2d');
 
-    Algorithms.initializeWalls(maze, 0.1, (i, j) => new ItemWithSprite(itemsCounter++, i, j, false, bgImg, 65, 65, 924, 159, 60, 60));
+        const mazeToCanvasPrinter = new MazeToCanvasPrinter(canvas2DCtx, CANVAS_WIDTH, CANVAS_HEIGHT, MAZE_WIDTH, MAZE_HEIGHT);
 
-    const img = new Image();
-    img.src = "hero.png";
-    const controlItem = new ItemWithControl(itemsCounter++, 3, 7, maze, img, 70, 70, 0, 0, PERSON_SIZE, PERSON_SIZE);
-    maze.place(controlItem);
+        Algorithms.initializeWalls(maze, 0.1, (i, j) => new ItemWithSprite(itemsCounter++, i, j, false, treeImage, 65, 65, 924, 159, 60, 60));
 
-    const mainItemController = new MangedItemController(maze, canvas, CANVAS_WIDTH, CANVAS_HEIGHT, ACTIONS_INTERVAL, controlItem);
+        const controlItem = new ItemWithControl(itemsCounter++, 3, 7, maze, loadImage("hero.png"), 70, 70, 0, 0, PERSON_SIZE, PERSON_SIZE);
+        maze.place(controlItem);
+        new MangedItemController(maze, canvas, CANVAS_WIDTH, CANVAS_HEIGHT, ACTIONS_INTERVAL, controlItem);
 
-    setInterval(() => {
-        canvas2DCtx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
-        mazeToCanvasPrinter.print(maze);
-    }, RERENDER_INTERVAL);
+        setTimeout(() => {
+            const enemyItem = new ItemWithSprite(itemsCounter++, 15, 15, false, loadImage("bandit.png"), 80, 120, 23, 10, PERSON_SIZE, PERSON_SIZE);
+            maze.place(enemyItem);
+            new EnemyController(maze, canvas, CANVAS_WIDTH, CANVAS_HEIGHT, ACTIONS_INTERVAL, enemyItem, controlItem);
+        }, 500);
+
+        setInterval(() => {
+            canvas2DCtx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+            mazeToCanvasPrinter.print(maze);
+        }, RERENDER_INTERVAL);
+    };
+
+    start();
+
 </script>
 
 </html>

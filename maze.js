@@ -133,7 +133,7 @@ class Maze {
         }
     }
 
-    init (n, m, backgroundObjectsSupplier) {
+    async init (n, m, backgroundObjectsSupplier) {
         this.resize(n, m);
         this.backgroundObjectsSupplier = backgroundObjectsSupplier;
         for (let i = 0; i < n; ++i) {

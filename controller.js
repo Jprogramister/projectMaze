@@ -87,3 +87,18 @@ class MangedItemController extends AbstractController {
         }
     }
 }
+
+class EnemyController extends AbstractController {
+    constructor (maze, canvas, canvasWidth, canvasHeight, actionIntervalMs, managedItem, mainHeroItem) {
+        super(maze, canvas, canvasWidth, canvasHeight, actionIntervalMs);
+        this.managedItem = managedItem;
+        this.currentTrack = [];
+        this.mainHeroItem = mainHeroItem;
+    }
+
+    onActionTick () {
+        this.currentTrack = Algorithms.findShortestStraightTrack(this.managedItem.i, this.managedItem.j, this.mainHeroItem.i, this.mainHeroItem.j);
+        const step = this.currentTrack.shift();
+        step.apply(this.managedItem, this.maze);
+    }
+}
