@@ -23,18 +23,22 @@
     const RERENDER_INTERVAL = 200;
     const ACTIONS_INTERVAL = 400;
     const PERSON_SIZE = 40;
+    const BG_SIZE = 35;
 
     var itemsCounter = 0;
 
     const maze = new Maze();
-    maze.init(MAZE_WIDTH, MAZE_HEIGHT, (i, j) => new ItemSymbol(itemsCounter++, i, j, '0'));
+
+    const bgImg = new Image();
+    bgImg.src = "forest.png";
+    maze.init(MAZE_WIDTH, MAZE_HEIGHT, (i, j) => new ItemWithSprite(itemsCounter++, i, j, true, bgImg, 20, 20, 680, 680, BG_SIZE, BG_SIZE));
 
     const canvas = document.getElementById('canvas');
     const canvas2DCtx = canvas.getContext('2d');
 
     const mazeToCanvasPrinter = new MazeToCanvasPrinter(canvas2DCtx, CANVAS_WIDTH, CANVAS_HEIGHT, MAZE_WIDTH, MAZE_HEIGHT);
 
-    Algorithms.initializeWalls(maze, 0.1, (i, j) => new ItemSymbol(itemsCounter++, i, j, 'W', false));
+    Algorithms.initializeWalls(maze, 0.1, (i, j) => new ItemWithSprite(itemsCounter++, i, j, false, bgImg, 65, 65, 924, 159, 60, 60));
 
     const img = new Image();
     img.src = "hero.png";
