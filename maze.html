@@ -20,16 +20,20 @@
 
 <body>
     <canvas class="canvas" id="canvas" width="600" height="600"></canvas>
+    <button id="button_up">UP</button>
+    <button id="button_down">DOWN</button>
+    <button id="button_left">LEFT</button>
+    <button id="button_right">RIGHT</button>
 </body>
 
 
 <script type="text/javascript">
     const start = async () => {
-        const maze = new Maze();
+        const maze = new Maze([0, 0], [Config.MAZE_WIDTH, Config.MAZE_HEIGHT]);
 
         const factory = new Factory(maze);
 
-        maze.init(Config.MAZE_WIDTH, Config.MAZE_HEIGHT, (i, j) => factory.newFloorItem(i, j));
+        maze.init((i, j) => factory.newFloorItem(i, j));
 
         const canvas = document.getElementById('canvas');
         const canvas2DCtx = canvas.getContext('2d');

@@ -45,18 +45,25 @@ class Vector {
 }
 
 class Maze {
-    constructor () {
+    constructor (leftUpperPoint, rightDownPoint) {
         this.grid = [];
-        this.n = 0;
-        this.m = 0;
+        this.n = Math.abs(rightDownPoint[0] - leftUpperPoint[0]);
+        this.m = Math.abs(rightDownPoint[1] - leftUpperPoint[1]);
         this.backgroundObjectsSupplier = undefined;
+        this.leftUpperPoint = leftUpperPoint;
+        this.rightDownPoint = rightDownPoint;
     }
 
-    itemAt (i, j) {
-        if (i > this.n || j > this.m) {
+    itemAt (i0, j0) {
+        const [i, j] = this.__mapToLocalXY(i0, j0);
+        if (i > this.n || j > this.m || i < 0 || j < 0) {
             throw new Error(`Cannot give a item at ${i} ${j} position. The current grid size is ${this.n} x ${this.m}.`)
         }
         return this.grid[i][j];
+    }
+
+    __mapToLocalXY(x, y) {
+        return [x - this.leftUpperPoint[0], y - this.leftUpperPoint[1]];
     }
 
     place (item) {
@@ -133,11 +140,11 @@ class Maze {
         }
     }
 
-    init (n, m, backgroundObjectsSupplier) {
-        this.resize(n, m);
+    init (backgroundObjectsSupplier) {
+        this.resize(this.n, this.m);
         this.backgroundObjectsSupplier = backgroundObjectsSupplier;
-        for (let i = 0; i < n; ++i) {
-            for (let j = 0; j < m; ++j) {
+        for (let i = 0; i < this.n; ++i) {
+            for (let j = 0; j < this.m; ++j) {
                 this.fill(i, j);
             }
         }

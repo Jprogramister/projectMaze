@@ -15,6 +15,9 @@ class MazeToCanvasPrinter {
         for (let x = mazeCellWidth, i = 0; x < this.widthPx; x += mazeCellWidth, i++) {
             for (let y = mazeCellHeight, j = 0; y < this.heightPx; y += mazeCellHeight, j++) {
                 const mazeItem = maze.itemAt(i, j);
+                if (!mazeItem) {
+                    continue;
+                }
                 if (mazeItem.isBackground) {
                     this.__printItem(mazeItem, x, y);
                 } else {
