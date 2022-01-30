@@ -29,7 +29,7 @@
 
         const factory = new Factory(maze);
 
-        await maze.init(Config.MAZE_WIDTH, Config.MAZE_HEIGHT, (i, j) => factory.newFloorItem(i, j));
+        maze.init(Config.MAZE_WIDTH, Config.MAZE_HEIGHT, (i, j) => factory.newFloorItem(i, j));
 
         const canvas = document.getElementById('canvas');
         const canvas2DCtx = canvas.getContext('2d');
