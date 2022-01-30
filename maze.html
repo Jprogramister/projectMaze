@@ -27,7 +27,7 @@
     const start = async () => {
         const maze = new Maze();
 
-        const factory = new Factory();
+        const factory = new Factory(maze);
 
         await maze.init(Config.MAZE_WIDTH, Config.MAZE_HEIGHT, (i, j) => factory.newFloorItem(i, j));
 
