@@ -10,10 +10,16 @@
     <script src="controller.js" type="text/javascript"></script>
     <script src="algorithms.js" type="text/javascript"></script>
     <script src="factory.js" type="text/javascript"></script>
+
+    <style type="text/css">
+        .canvas {
+            border: 1px solid black;
+        }
+    </style>
 </head>
 
 <body>
-    <canvas id="canvas" width="600" height="600"></canvas>
+    <canvas class="canvas" id="canvas" width="600" height="600"></canvas>
 </body>
 
 
@@ -32,14 +38,16 @@
 
         Algorithms.initializeWalls(maze, 0.1, (i, j) => factory.newTreeItem(i, j));
 
+        const controllerRegistry = new ControllersRegistry(Config.ACTIONS_INTERVAL);
+
         const controlItem = factory.newDwarfItem(3, 7);
         maze.place(controlItem);
-        new MangedItemController(maze, canvas, Config.CANVAS_WIDTH, Config.CANVAS_HEIGHT, Config.ACTIONS_INTERVAL, controlItem);
+        controllerRegistry.register(new MangedItemController(maze, canvas, Config.CANVAS_WIDTH, Config.CANVAS_HEIGHT, controlItem));
 
         setTimeout(() => {
             const enemyItem = factory.newBanditItem(15, 15);
             maze.place(enemyItem);
-            new EnemyController(maze, canvas, Config.CANVAS_WIDTH, Config.CANVAS_HEIGHT, Config.ACTIONS_INTERVAL, enemyItem, controlItem);
+            controllerRegistry.register(new EnemyController(maze, canvas, Config.CANVAS_WIDTH, Config.CANVAS_HEIGHT, enemyItem, controlItem));
         }, 500);
 
         setInterval(() => {

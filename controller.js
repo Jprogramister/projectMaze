@@ -1,9 +1,23 @@
 
+
+class ControllersRegistry {
+    constructor (actionIntervalMs) {
+        this.controllersWithAction = [];
+        this.actionInterval = setInterval(this.__tick.bind(this), actionIntervalMs);
+    }
+
+    register (controller) {
+        this.controllersWithAction.push(controller);
+    }
+
+    __tick () {
+        this.controllersWithAction.forEach(controller => controller.onActionTick());
+    }
+}
+
 class AbstractController {
-    constructor (maze, canvas, canvasWidth, canvasHeight, actionIntervalMs) {
+    constructor (maze, canvas, canvasWidth, canvasHeight) {
         this.maze = maze;
-        this.actionIntervalMs = actionIntervalMs;
-        this.actionInterval = setInterval(this.onActionTick.bind(this), actionIntervalMs);
         this.canvasWidth = canvasWidth;
         this.canvasHeight = canvasHeight;
         this.canvas = canvas;
@@ -54,8 +68,8 @@ class AbstractController {
 }
 
 class MangedItemController extends AbstractController {
-    constructor (maze, canvas, canvasWidth, canvasHeight, actionIntervalMs, managedItem) {
-        super(maze, canvas, canvasWidth, canvasHeight, actionIntervalMs);
+    constructor (maze, canvas, canvasWidth, canvasHeight, managedItem) {
+        super(maze, canvas, canvasWidth, canvasHeight);
         this.managedItem = managedItem;
         this.currentTrack = [];
     }
@@ -89,8 +103,8 @@ class MangedItemController extends AbstractController {
 }
 
 class EnemyController extends AbstractController {
-    constructor (maze, canvas, canvasWidth, canvasHeight, actionIntervalMs, managedItem, mainHeroItem) {
-        super(maze, canvas, canvasWidth, canvasHeight, actionIntervalMs);
+    constructor (maze, canvas, canvasWidth, canvasHeight, managedItem, mainHeroItem) {
+        super(maze, canvas, canvasWidth, canvasHeight);
         this.managedItem = managedItem;
         this.currentTrack = [];
         this.mainHeroItem = mainHeroItem;
