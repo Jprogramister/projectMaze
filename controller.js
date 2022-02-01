@@ -75,8 +75,8 @@ class MangedItemController extends AbstractController {
     }
 
     onMazeItemClicked (clickedItem) {
-        Log.debug(`Going from [${this.managedItem.i + "," + this.managedItem.j}] to [${clickedItem.i + "," + clickedItem.j}].`);
-        this.currentTrack = Algorithms.findShortestStraightTrack(this.managedItem.i, this.managedItem.j, clickedItem.i, clickedItem.j);
+        Log.debug(`Going from [${this.managedItem.x + "," + this.managedItem.y}] to [${clickedItem.x + "," + clickedItem.y}].`);
+        this.currentTrack = Algorithms.findShortestStraightTrack(this.managedItem.y, this.managedItem.x, clickedItem.y, clickedItem.x);
     }
 
     onActionTick () {
@@ -96,14 +96,14 @@ class EnemyController extends AbstractController {
     }
 
     onActionTick () {
-        const distanceForHero = Algorithms.manhattanLength(this.managedItem.i, this.managedItem.j, this.mainHeroItem.i, this.mainHeroItem.j);
+        const distanceForHero = Algorithms.manhattanLength(this.managedItem.x, this.managedItem.y, this.mainHeroItem.x, this.mainHeroItem.y);
         if (distanceForHero <= 1) {
             return;
         }
 
-        this.currentTrack = Algorithms.findShortestStraightTrack(this.managedItem.i, this.managedItem.j, this.mainHeroItem.i, this.mainHeroItem.j);
+        this.currentTrack = Algorithms.findShortestStraightTrack(this.managedItem.x, this.managedItem.y, this.mainHeroItem.x, this.mainHeroItem.y);
         if (this.currentTrack.length === 0) {
-            throw new Error(`Cannot find a track from ${this.mainHeroItem.i + " " + this.mainHeroItem.j} to ${this.managedItem.i + " " + this.managedItem.j}`)
+            throw new Error(`Cannot find a track from ${this.mainHeroItem.x + " " + this.mainHeroItem.y} to ${this.managedItem.x + " " + this.managedItem.y}`)
         }
         const step = this.currentTrack.shift();
         step.apply(this.managedItem, this.maze);

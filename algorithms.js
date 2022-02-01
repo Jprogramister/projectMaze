@@ -5,7 +5,8 @@ class Algorithms {
         for (let i = 1; i < amountOfWalls; ++i) {
             const y =  Math.floor(Math.random() * maze.rows());
             const x =  Math.floor(Math.random() * maze.columns());
-            maze.place(staticObjectsSupplier(x, y));
+            // TODO generate walls for every maze not only for central
+            maze.place(staticObjectsSupplier(x, y, x, y));
         }
     }
 

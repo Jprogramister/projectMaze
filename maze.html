@@ -32,25 +32,25 @@
 
         const factory = new Factory(maze);
 
-        maze0.init((i, j) => factory.newFloorItem(i, j));
+        maze0.init((i, j, x, y) => factory.newFloorItem(i, j, x, y));
 
         const canvas = document.getElementById('canvas');
         const canvas2DCtx = canvas.getContext('2d');
 
         const mazeToCanvasPrinter = new MazeToCanvasPrinter(canvas2DCtx, Config.CANVAS_WIDTH, Config.CANVAS_HEIGHT, Config.MAZE_WIDTH, Config.MAZE_HEIGHT);
 
-        Algorithms.initializeWalls(maze, 0.1, (i, j) => factory.newTreeItem(i, j));
+        Algorithms.initializeWalls(maze, 0.1, (i, j, x, y) => factory.newTreeItem(i, j, x, y));
 
         const controllerRegistry = new ControllersRegistry(Config.ACTIONS_INTERVAL);
 
-        const controlItem = factory.newDwarfItem(3, 7);
+        const controlItem = factory.newDwarfItem(3, 7, 3, 7);
         maze.place(controlItem);
         controllerRegistry.register(new MangedItemController(maze, canvas, Config.CANVAS_WIDTH, Config.CANVAS_HEIGHT, controlItem));
 
         new MapOffsetsController(maze, canvas, Config.CANVAS_WIDTH, Config.CANVAS_HEIGHT);
 
         setTimeout(() => {
-            const enemyItem = factory.newBanditItem(15, 15);
+            const enemyItem = factory.newBanditItem(15, 15, 15, 15);
             maze.place(enemyItem);
             controllerRegistry.register(new EnemyController(maze, canvas, Config.CANVAS_WIDTH, Config.CANVAS_HEIGHT, enemyItem, controlItem));
         }, 500);

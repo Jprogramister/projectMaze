@@ -16,31 +16,31 @@ class Factory {
         this.dwarfPng = loadImage("hero.png");
     }
 
-    newFloorItem (i, j) {
+    newFloorItem (i, j, x, y) {
         if (Config.isDebug) {
-            return new ItemSymbol(this.itemsCounter++, i, j, '0', true)
+            return new ItemSymbol(this.itemsCounter++, i, j, x, y, '0', true)
         }
-        return new ItemWithSprite(this.itemsCounter++, i, j, true, this.forestPng, 20, 20, 680, 680, Config.BG_SIZE, Config.BG_SIZE);
+        return new ItemWithSprite(this.itemsCounter++, i, j, x, y, true, this.forestPng, 20, 20, 680, 680, Config.BG_SIZE, Config.BG_SIZE);
     }
 
-    newTreeItem (i, j) {
+    newTreeItem (i, j, x, y) {
         if (Config.isDebug) {
-            return new ItemSymbol(this.itemsCounter++, i, j, 'T', false)
+            return new ItemSymbol(this.itemsCounter++, i, j, x, y, 'T', false)
         }
-        return new ItemWithSprite(this.itemsCounter++, i, j, false, this.forestPng, 65, 65, 924, 159, 60, 60);
+        return new ItemWithSprite(this.itemsCounter++, i, j, x, y, false, this.forestPng, 65, 65, 924, 159, 60, 60);
     }
 
-    newBanditItem (i, j) {
+    newBanditItem (i, j, x, y) {
         if (Config.isDebug) {
-            return new ItemSymbol(this.itemsCounter++, i, j, 'B', false)
+            return new ItemSymbol(this.itemsCounter++, i, j, x, y, 'B', false)
         }
-        return new ItemWithSprite(this.itemsCounter++, i, j, false, this.banditPng, 80, 120, 23, 10, Config.PERSON_SIZE, Config.PERSON_SIZE);
+        return new ItemWithSprite(this.itemsCounter++, i, j, x, y, false, this.banditPng, 80, 120, 23, 10, Config.PERSON_SIZE, Config.PERSON_SIZE);
     }
 
-    newDwarfItem (i, j) {
+    newDwarfItem (i, j, x, y) {
         if (Config.isDebug) {
-            return new ItemSymbol(this.itemsCounter++, i, j, 'X', false)
+            return new ItemSymbol(this.itemsCounter++, i, j, x, y, 'X', false)
         }
-        return new ItemWithControl(this.itemsCounter++, i, j, this.maze, this.dwarfPng, 70, 70, 0, 0, Config.PERSON_SIZE, Config.PERSON_SIZE);
+        return new ItemWithControl(this.itemsCounter++, i, j, x, y, this.maze, this.dwarfPng, 70, 70, 0, 0, Config.PERSON_SIZE, Config.PERSON_SIZE);
     }
 }

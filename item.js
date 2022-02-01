@@ -1,23 +1,28 @@
 
 class AbstractItem {
-    constructor (id, i, j, isBackground = true) {
+    constructor (id, i, j, x, y, isBackground = true) {
         this.id = id;
         this.i = i;
         this.j = j;
         this.isBackground = isBackground;
+        this.x = x;
+        this.y = y;
+        if (x === undefined || y === undefined) {
+            throw new Error(`Cannot be undefined x y.`);
+        }
     }
 }
 
 class ItemWithSprite extends AbstractItem {
-    constructor (id, i, j, isBackground, image, sWidth, sHeight, dx, dy, dw, dh) {
-        super(id, i, j, isBackground);
+    constructor (id, i, j, x, y, isBackground, image, sWidth, sHeight, dx, dy, dw, dh) {
+        super(id, i, j, x, y, isBackground);
         this.drawer = (ctx, x, y) => ctx.drawImage(image, dx, dy, sWidth, sHeight, x, y, dw, dh);
     }
 }
 
 class ItemWithControl extends ItemWithSprite {
-    constructor (id, i, j, maze, image, sWidth, sHeight, dx, dy, dw, dh) {
-        super(id, i, j, false, image, sWidth, sHeight, dx, dy, dw, dh);
+    constructor (id, i, j, x, y, maze, image, sWidth, sHeight, dx, dy, dw, dh) {
+        super(id, i, j, x, y, false, image, sWidth, sHeight, dx, dy, dw, dh);
         this.maze = maze;
     }
 
@@ -39,8 +44,8 @@ class ItemWithControl extends ItemWithSprite {
 }
 
 class ItemSymbol extends AbstractItem {
-    constructor (id, i, j, symbol, isBackground = true) {
-        super(id, i, j, isBackground);
+    constructor (id, i, j, x, y, symbol, isBackground = true) {
+        super(id, i, j, x, y, isBackground);
         this.symbol = symbol;
     }
 }

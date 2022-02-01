@@ -161,6 +161,10 @@ class Maze {
         return [x - this.leftUpperPoint[0], y - this.leftUpperPoint[1]];
     }
 
+    __mapToGlobalXY (i, j) {
+        return [i + this.leftUpperPoint[0], j + this.leftUpperPoint[1]];
+    }
+
     place (item) {
         const [i, j] = this.__mapToLocalXY(item.i, item.j);
         this.grid[i][j] = item;
@@ -181,12 +185,14 @@ class Maze {
             case Direction.down: 
             case Direction.up: 
                 item.j = item.j + shift;
+                item.x = item.x + shift;
                 this.place(item);
                 this.__fill(i, j);
                 return true;
             case Direction.left: 
             case Direction.right: 
                 item.i = item.i + shift;
+                item.y = item.y + shift;
                 this.place(item);
                 this.__fill(i, j);
                 return true;
@@ -242,7 +248,8 @@ class Maze {
         this.backgroundObjectsSupplier = backgroundObjectsSupplier;
         for (let i = 0; i < this.n; ++i) {
             for (let j = 0; j < this.m; ++j) {
-                this.grid[i][j] = this.backgroundObjectsSupplier(i, j);
+                const [x, y] = this.__mapToGlobalXY(i, j);
+                this.grid[i][j] = this.backgroundObjectsSupplier(i, j, x, y);
             }
         }
         return this;
@@ -250,6 +257,6 @@ class Maze {
 
     __fill (i0, j0) {
         let [i, j] = this.__mapToLocalXY(i0, j0);
-        this.grid[i][j] = this.backgroundObjectsSupplier(i, j);
+        this.grid[i][j] = this.backgroundObjectsSupplier(i, j, i0, j0);
     }
 }
