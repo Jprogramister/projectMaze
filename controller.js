@@ -96,6 +96,11 @@ class EnemyController extends AbstractController {
     }
 
     onActionTick () {
+        const distanceForHero = Algorithms.manhattanLength(this.managedItem.i, this.managedItem.j, this.mainHeroItem.i, this.mainHeroItem.j);
+        if (distanceForHero <= 1) {
+            return;
+        }
+
         this.currentTrack = Algorithms.findShortestStraightTrack(this.managedItem.i, this.managedItem.j, this.mainHeroItem.i, this.mainHeroItem.j);
         if (this.currentTrack.length === 0) {
             throw new Error(`Cannot find a track from ${this.mainHeroItem.i + " " + this.mainHeroItem.j} to ${this.managedItem.i + " " + this.managedItem.j}`)
