@@ -74,22 +74,6 @@ class MangedItemController extends AbstractController {
         this.currentTrack = [];
     }
 
-    onButtonUpClicked () {
-        this.managedItem.moveUp();
-    }
-
-    onButtonDownClicked () {
-        this.managedItem.moveDown();
-    }
-
-    onButtonLeftClicked () {
-        this.managedItem.moveLeft();
-    }
-
-    onButtonRightClicked () {
-        this.managedItem.moveRight();
-    }
-
     onMazeItemClicked (clickedItem) {
         Log.debug(`Going from [${this.managedItem.i + "," + this.managedItem.j}] to [${clickedItem.i + "," + clickedItem.j}].`);
         this.currentTrack = Algorithms.findShortestStraightTrack(this.managedItem.i, this.managedItem.j, clickedItem.i, clickedItem.j);
