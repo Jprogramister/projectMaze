@@ -4,15 +4,6 @@ class MazeToCanvasPrinter {
         this.canvas2DCtx = canvas2DCtx;
         this.widthPx = widthPx;
         this.heightPx = heightPx;
-        this.gridWidth = gridWidth;
-        this.gridHeight = gridHeight;
-        this.offsetX = 0;
-        this.offsetY = 0;
-    }
-
-    addOffset (x, y) {
-        this.offsetX += x;
-        this.offsetY += y;
     }
 
     print (maze) {
@@ -21,7 +12,7 @@ class MazeToCanvasPrinter {
         const delayedDrawing = [];
         for (let x = mazeCellWidth, i = 0; x < this.widthPx; x += mazeCellWidth, i++) {
             for (let y = mazeCellHeight, j = 0; y < this.heightPx; y += mazeCellHeight, j++) {
-                const mazeItem = maze.itemAt(i - this.offsetY, j - this.offsetX);
+                const mazeItem = maze.itemAt(i - GlobalState.offsetY, j - GlobalState.offsetX);
                 if (!mazeItem) {
                     continue;
                 }

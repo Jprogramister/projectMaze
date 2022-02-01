@@ -11,6 +11,7 @@
     <script src="algorithms.js" type="text/javascript"></script>
     <script src="factory.js" type="text/javascript"></script>
     <script src="log.js" type="text/javascript"></script>
+    <script src="globalState.js" type="text/javascript"></script>
 
     <style type="text/css">
         .canvas {
@@ -46,7 +47,7 @@
         maze.place(controlItem);
         controllerRegistry.register(new MangedItemController(maze, canvas, Config.CANVAS_WIDTH, Config.CANVAS_HEIGHT, controlItem));
 
-        new MapOffsetsController(maze, canvas, Config.CANVAS_WIDTH, Config.CANVAS_HEIGHT, mazeToCanvasPrinter);
+        new MapOffsetsController(maze, canvas, Config.CANVAS_WIDTH, Config.CANVAS_HEIGHT);
 
         setTimeout(() => {
             const enemyItem = factory.newBanditItem(15, 15);

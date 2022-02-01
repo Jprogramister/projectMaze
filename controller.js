@@ -41,8 +41,8 @@ class AbstractController {
             const {x, y} = event;
             const mazeItemWidthPx = this.canvasWidth / this.maze.rows();
             const mazeItemHeightPx = this.canvasHeight / this.maze.columns();
-            const itemI = Math.ceil(x / mazeItemHeightPx) - 2;
-            const itemJ = Math.ceil(y / mazeItemWidthPx) - 2;
+            const itemI = Math.ceil(x / mazeItemHeightPx) - 2 - GlobalState.offsetY;
+            const itemJ = Math.ceil(y / mazeItemWidthPx) - 2 - GlobalState.offsetX;
             const item = this.maze.itemAt(itemI, itemJ);
             this.onMazeItemClicked(item);
         }.bind(this));
@@ -106,24 +106,23 @@ class EnemyController extends AbstractController {
 }
 
 class MapOffsetsController extends AbstractController {
-    constructor (maze, canvas, canvasWidth, canvasHeight, mazePrinter) {
+    constructor (maze, canvas, canvasWidth, canvasHeight) {
         super(maze, canvas, canvasWidth, canvasHeight);
-        this.mazePrinter = mazePrinter;
     }
 
     onButtonUpClicked() {
-        this.mazePrinter.addOffset(-1, 0);
+        GlobalState.addOffset(-1, 0);
     }
 
     onButtonDownClicked() {
-        this.mazePrinter.addOffset(1, 0);
+        GlobalState.addOffset(1, 0);
     }
 
     onButtonLeftClicked() {
-        this.mazePrinter.addOffset(0, -1);
+        GlobalState.addOffset(0, -1);
     }
 
     onButtonRightClicked() {
-        this.mazePrinter.addOffset(0, 1);
+        GlobalState.addOffset(0, 1);
     }
 }
