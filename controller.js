@@ -91,6 +91,7 @@ class MangedItemController extends AbstractController {
     }
 
     onMazeItemClicked (clickedItem) {
+        Log.debug(`Going from ${this.managedItem.i + " " + this.managedItem.j} to ${clickedItem.i + " " + clickedItem.j}.`);
         this.currentTrack = Algorithms.findShortestStraightTrack(this.managedItem.i, this.managedItem.j, clickedItem.i, clickedItem.j);
     }
 

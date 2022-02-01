@@ -11,6 +11,6 @@ var Config = {
     ACTIONS_INTERVAL: 400,
     PERSON_SIZE: 40,
     BG_SIZE: 35,
-    isDebug: false,
+    isDebug: true,
     enableFullLog: true
 }
