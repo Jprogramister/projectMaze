@@ -32,7 +32,11 @@ class MazeToCanvasPrinter {
 
     __printItem (item, x, y) {
         if (item.constructor.name === "ItemSymbol") {
-            this.canvas2DCtx.fillText(item.symbol, x, y);
+            if (item.i !== 0 && item.j !== 0) {
+                this.canvas2DCtx.fillText(item.symbol, x, y);
+            } else {
+                this.canvas2DCtx.fillText(item.i === 0 ? item.j : item.i, x, y);
+            }
         }
         if (item.drawer) {
             const spriteX = item.i * (this.widthPx / this.gridWidth);
