@@ -104,3 +104,26 @@ class EnemyController extends AbstractController {
         step.apply(this.managedItem, this.maze);
     }
 }
+
+class MapOffsetsController extends AbstractController {
+    constructor (maze, canvas, canvasWidth, canvasHeight, mazePrinter) {
+        super(maze, canvas, canvasWidth, canvasHeight);
+        this.mazePrinter = mazePrinter;
+    }
+
+    onButtonUpClicked() {
+        this.mazePrinter.addOffset(-1, 0);
+    }
+
+    onButtonDownClicked() {
+        this.mazePrinter.addOffset(1, 0);
+    }
+
+    onButtonLeftClicked() {
+        this.mazePrinter.addOffset(0, -1);
+    }
+
+    onButtonRightClicked() {
+        this.mazePrinter.addOffset(0, 1);
+    }
+}

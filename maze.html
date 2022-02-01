@@ -46,6 +46,8 @@
         maze.place(controlItem);
         controllerRegistry.register(new MangedItemController(maze, canvas, Config.CANVAS_WIDTH, Config.CANVAS_HEIGHT, controlItem));
 
+        new MapOffsetsController(maze, canvas, Config.CANVAS_WIDTH, Config.CANVAS_HEIGHT, mazeToCanvasPrinter);
+
         setTimeout(() => {
             const enemyItem = factory.newBanditItem(15, 15);
             maze.place(enemyItem);
