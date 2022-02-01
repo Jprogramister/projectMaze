@@ -44,6 +44,68 @@ class Vector {
     }
 }
 
+class MazeAssembly {
+    constructor (startMaze) {
+        this.mazes = [];
+        this.mazes.push(startMaze);
+        this.startMaze = startMaze;
+        this.startMaze.isVisible = true;
+    }
+
+    rows () {
+        return this.startMaze.rows();
+    }
+
+    columns () {
+        return this.startMaze.columns();
+    }
+
+    itemAt (i, j) {
+        return this.__getMaze(i, j).itemAt(i, j);
+    }
+
+    place (item) {
+        return this.__getMaze(item.i, item.j).place(item);
+    }
+
+    shiftItem (i, j, direction, shift = 1) {
+        return this.__getMaze(i, j).shiftItem(i, j, direction, shift);
+    }
+
+    __getMaze (i, j) {
+        const targetMaze = this.mazes.find(m => m.containsPoint(i, j));
+        if (targetMaze) {
+            return targetMaze;
+        } else {
+            this.__extendNeighbour(i, j);
+            const createdMaze = this.mazes.find(m => m.containsPoint(i, j));
+            if (!createdMaze) {
+                throw new Error(`Can't extend maze for coordinates ${i + " " + j}.`)
+            }
+            return createdMaze;
+        }
+    }
+
+    __extendNeighbour (i, j) {
+        let nearestMaze = null;
+        let minDistance = Number.MAX_SAFE_INTEGER;
+        for (let it = this.mazes.values(), m= null; m = it.next().value; ) {
+            if (m.__distance(i, j) < minDistance) {
+                nearestMaze = m;
+                minDistance = m.__distance(i, j);
+            }
+        }
+        const newMazes = nearestMaze.createNeighbours();
+        for (let i = 0; i < newMazes.length; ++i) {
+            this.__registerNew(newMazes[i]);
+        }
+    }
+
+    __registerNew (maze) {
+        this.mazes.push(maze);
+    }
+}
+
 class Maze {
     constructor (leftUpperPoint, rightDownPoint) {
         this.grid = [];
@@ -52,6 +114,34 @@ class Maze {
         this.backgroundObjectsSupplier = undefined;
         this.leftUpperPoint = leftUpperPoint;
         this.rightDownPoint = rightDownPoint;
+        this.isVisible = false;
+    }
+
+    createNeighbours () {
+        const res = [];
+
+        let newLeftUpperPoint = [this.leftUpperPoint[0] - this.n, this.leftUpperPoint[1] - this.m];
+        let newRightDownPoint = [this.rightDownPoint[0] - this.n, this.rightDownPoint[1] - this.m];
+        res.push(new Maze(newLeftUpperPoint, newRightDownPoint).init(this.backgroundObjectsSupplier));
+
+        newLeftUpperPoint = [this.leftUpperPoint[0], this.leftUpperPoint[1] - this.m];
+        newRightDownPoint = [this.rightDownPoint[0], this.rightDownPoint[1] - this.m];
+        res.push(new Maze(newLeftUpperPoint, newRightDownPoint).init(this.backgroundObjectsSupplier));
+
+        newLeftUpperPoint = [this.leftUpperPoint[0] - this.n, this.leftUpperPoint[1]];
+        newRightDownPoint = [this.rightDownPoint[0] - this.n, this.rightDownPoint[1]];
+        res.push(new Maze(newLeftUpperPoint, newRightDownPoint).init(this.backgroundObjectsSupplier));
+
+        return res;
+    }
+
+    containsPoint (x, y) {
+        return x >= this.leftUpperPoint[0] && x < this.rightDownPoint[0]
+            && y >= this.leftUpperPoint[1] && y < this.rightDownPoint[1];
+    }
+
+    __distance (x, y) {
+        return Math.sqrt(Math.pow(x - this.leftUpperPoint[0], 2) + Math.pow(y - this.leftUpperPoint[1], 2));
     }
 
     itemAt (i0, j0) {
@@ -62,19 +152,25 @@ class Maze {
         return this.grid[i][j];
     }
 
+    // itemAt with local coordinates of item (without mapping)
+    __itemAt (i, j) {
+        return this.grid[i][j];
+    }
+
     __mapToLocalXY(x, y) {
         return [x - this.leftUpperPoint[0], y - this.leftUpperPoint[1]];
     }
 
     place (item) {
-        this.grid[item.i][item.j] = item;
+        const [i, j] = this.__mapToLocalXY(item.i, item.j);
+        this.grid[i][j] = item;
     }
 
     shiftItem (i, j, direction, shift = 1) {
         if (direction === Direction.left || direction === Direction.up) {
             shift = -shift;
         }
-        const neighbour = this.neighbourOf(i, j, direction, shift);
+        const neighbour = this.__neighbourOf(i, j, direction, shift);
         if (!neighbour || !neighbour.isBackground) {
             return false;
         }
@@ -86,19 +182,20 @@ class Maze {
             case Direction.up: 
                 item.j = item.j + shift;
                 this.place(item);
-                this.fill(i, j);
+                this.__fill(i, j);
                 return true;
             case Direction.left: 
             case Direction.right: 
                 item.i = item.i + shift;
                 this.place(item);
-                this.fill(i, j);
+                this.__fill(i, j);
                 return true;
         }
     }
 
-    neighbourOf(i, j, direction, shift = 1) {
+    __neighbourOf(i0, j0, direction, shift = 1) {
         let isNeighbourExists = false;
+        let [i, j] = this.__mapToLocalXY(i0, j0);
         switch (direction) {
             case Direction.none: break;
             case Direction.down:
@@ -116,7 +213,7 @@ class Maze {
                 }
                 break;
         }
-        return isNeighbourExists ? this.itemAt(i, j) : undefined;
+        return isNeighbourExists ? this.__itemAt(i, j) : undefined;
     }
 
     rows () {
@@ -127,7 +224,7 @@ class Maze {
         return this.m;
     }
 
-    resize (n, m) {
+    __resize (n, m) {
         this.n = n;
         this.m = m;
         this.grid = [];
@@ -141,16 +238,18 @@ class Maze {
     }
 
     init (backgroundObjectsSupplier) {
-        this.resize(this.n, this.m);
+        this.__resize(this.n, this.m);
         this.backgroundObjectsSupplier = backgroundObjectsSupplier;
         for (let i = 0; i < this.n; ++i) {
             for (let j = 0; j < this.m; ++j) {
-                this.fill(i, j);
+                this.grid[i][j] = this.backgroundObjectsSupplier(i, j);
             }
         }
+        return this;
     }
 
-    fill (i, j) {
+    __fill (i0, j0) {
+        let [i, j] = this.__mapToLocalXY(i0, j0);
         this.grid[i][j] = this.backgroundObjectsSupplier(i, j);
     }
 }

@@ -29,11 +29,12 @@
 
 <script type="text/javascript">
     const start = async () => {
-        const maze = new Maze([0, 0], [Config.MAZE_WIDTH, Config.MAZE_HEIGHT]);
+        const maze0 = new Maze([1, 1], [Config.MAZE_WIDTH, Config.MAZE_HEIGHT]);
+        const maze = new MazeAssembly(maze0);
 
         const factory = new Factory(maze);
 
-        maze.init((i, j) => factory.newFloorItem(i, j));
+        maze0.init((i, j) => factory.newFloorItem(i, j));
 
         const canvas = document.getElementById('canvas');
         const canvas2DCtx = canvas.getContext('2d');
